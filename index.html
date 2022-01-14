@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Plannel Time</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="https://kit.fontawesome.com/ab6473ddbb.js" crossorigin="anonymous"></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body id="planneltime" style="background-image:url('FlannelWallpaper-3.png'); margin:0">
+    <header>
+      <h1 style="padding: 20px;color: white;margin: 0;">Plannel Time</h1>
+    </header>
+    <section style="padding: 20px; background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.75) 0.1%, rgba(0,0,0,0) 0.21%, rgba(0,0,0,0) 100%);">
+      <div style="padding:10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+        <span>
+          <select v-on:input="updateTimeframe()" v-model="month">
+            <option value ="1">January</option>
+            <option value ="2">Febraruy</option>
+            <option value ="3">March</option>
+            <option value ="4">April</option>
+            <option value ="5">May</option>
+            <option value ="6">June</option>
+            <option value ="7">July</option>
+            <option value ="8">August</option>
+            <option value ="9">September</option>
+            <option value ="10">October</option>
+            <option value ="11">November</option>
+            <option value ="12">December</option>
+          </select>
+          <input type="number" v-on:input="updateTimeframe()" v-model="year" min="1990" max="9999">
+        </span>
+        </div>
+        <div>
+          <div v-for="week in weeksWithinMonth" :key="week.dates[0].getDate()">
+            <div style="padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+              <div>
+                <table>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td>
+                            <table>
+                              <tr>
+                                <th style="text-align: left; width: 120px;">Date</th>
+                              </tr>
+                            </table>
+                          </td>
+                          <td>
+                            <table>
+                              <tr>
+                                <th style="text-align: left; width: 50px;"></th>
+                                <th style="text-align: left; width: 80px;">Start Time</th>
+                                <th style="text-align: left; width: 60px;">Hours</th>
+                                <th style="text-align: left; width: 60px;"></th>
+                                <th style="text-align: left; width: 100px;">Project</th>
+                                <th style="text-align: left; width: 100px;">Story</th>
+                                <th style="text-align: left; width: 100px;">Note</th>
+                                <th style="width: 50px;"></th>
+                              </tr>
+                            </table>
+                          </td>
+                          <td>
+                            <table>
+                              <tr>
+                                <th style="text-align: left; width: 100px;">Project</th>
+                                <th style="text-align: left; width: 100px;">Story</th>
+                                <th style="text-align: left; width: 60px;">Hours</th>
+                                <th style="text-align: left; width: 60px;"></th>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div v-for="date in week.dates" :key="date.getDate()" style="border-top: solid 1px">
+                <table>
+                  <tr>
+                    <td style="vertical-align: top;">
+                      <table>
+                        <tr>
+                          <td style="vertical-align: top;">
+                            <table>
+                              <tr>
+                                <td style="width: 120px;">{{displayDayOfWeek(date.getDay())}} - {{date.getMonth()+1}}/{{date.getDate()}}</td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td style="vertical-align: top;">
+                            <table v-if="(timeEntriesForDate(date)).length" id="timeentries">
+                              <tr v-for="(timeEntry, index) in timeEntriesForDate(date)" :key="timeEntry.id">
+                                <td v-if="!timeEntry.editing && timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="fas fa-check-square"></i></td>
+                                <td v-if="!timeEntry.editing && !timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 80px;">{{ timeFromDateDisplay(new Date(timeEntry.startTime)) }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 60px;">{{ displayHoursTime(new Date(getTimeEntryDurationMin(timeEntry))) }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 60px;">{{ displayHoursDecimal(new Date(getTimeEntryDurationMin(timeEntry))) }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.projectCode }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.storyRef }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.note }}</td>
+                                <td v-if="!timeEntry.editing" style="width: 50px;"><i class="fas fa-minus-circle" @click="deleteTimeEntry(timeEntry)"></i></td>
+                                <td v-if="timeEntry.editing && timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="fas fa-check-square"></i></td>
+                                <td v-if="timeEntry.editing && !timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
+                                <td v-if="timeEntry.editing" style="width: 120px;"><input type="time" v-model="timeEntry.tempStartTime" v-on:input="setStartTime($event, timeEntry)" style="width: 120px;"/></td>
+                                <td v-if="timeEntry.editing" style="width: 60px;"></td>
+                                <td v-if="timeEntry.editing" style="width: 60px;"></td>
+                                <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempProjectCode" v-on:input="setProjectCode($event, timeEntry)" style="width: 90px;"/></td>
+                                <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempStoryRef" v-on:input="setStoryRef($event, timeEntry)" style="width: 90px;"/></td>
+                                <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempNote" v-on:input="setNote($event, timeEntry)" style="width: 90px;"/></td>
+                                <td v-if="timeEntry.editing" style="width: 50px;"><i class="fas fa-check-circle" @click="saveEdits(timeEntry)"></i><i style="margin-left: 5px;" class="fas fa-ban" @click="cancelEdit(timeEntry)"></i></td>
+                              </tr>
+                              <tr><td><i class="fas fa-plus-circle" @click="addNewEntry(date)"></i></td></tr>
+                            </table>
+                            <table v-if="(timeEntriesForDate(date)).length === 0">
+                              <tr>
+                                <td style="width: 50px;"></td>
+                                <td style="width: 80px;"></td>
+                                <td style="width: 60px;"></td>
+                                <td style="width: 60px;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 50px;"></td>
+                              </tr>
+                              <tr><td><i class="fas fa-plus-circle" @click="addNewEntry(date)"></i></td></tr>
+                            </table>
+                          </td>
+                          <td style="vertical-align: top;">
+                            <table id="daysummary">
+                              <tr v-for="daySummary in daySummariesForDate(date)" :key="daySummary.id">
+                                <td style="width: 100px;">{{ daySummary.projectCode }}</td>
+                                <td style="width: 100px;">{{ daySummary.storyRef }}</td>
+                                <td style="width: 60px;">{{ displayHoursTime(daySummary.durationMin) }}</td>
+                                <td style="width: 60px;">{{ displayHoursDecimal(daySummary.durationMin) }}</td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div style="padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+              <label>Summary of Week Ending {{displayDayOfWeek(week.lastDate)}} - {{week.lastDate.getMonth()+1}}/{{week.lastDate.getDate()}}</label>
+              <table id="weeksummary">
+                <tr>
+                  <th style="text-align: left; width: 100px;">Project</th>
+                  <th style="text-align: left; width: 100px;">Hours</th>
+                  <th style="text-align: left; width: 100px;"></th>
+                </tr>
+                <tr v-for="weekSummary in week.summary" :key="weekSummary.id">
+                  <td>{{ weekSummary.projectCode }}</td>
+                  <td>{{ displayHoursTime(weekSummary.durationMin) }}</td>
+                  <td>{{ displayHoursDecimal(weekSummary.durationMin) }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
