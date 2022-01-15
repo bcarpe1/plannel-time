@@ -17,10 +17,16 @@ const app = Vue.createApp({
   methods: {
     addNewEntry(date) {
       let id = 0;
-      if(this.timeEntryList && this.timeEntryList.length) id = Math.max(...(this.timeEntryList.map(x => x.id))) + 1
+      if(this.timeEntryList && this.timeEntryList.length) {
+        id = Math.max(...(this.timeEntryList.map(x => x.id))) + 1;
+      }
+      let startTime = date.getTime();
+      let currentDate = new Date();
+      startTime += (Date.now() - currentDate.getTimezoneOffset() * 60000) % 86400000;
       this.timeEntryList.push({
         id: id,
-        startTime: date.getTime(),
+        startTime: startTime,
+        tempStartTime: this.timeFromDate(new Date(startTime)),
         timeMarked: false,
         editing: true,
         entered: false,
@@ -109,15 +115,9 @@ const app = Vue.createApp({
         timeEntry.tempStartTime = new Date(originalStartTime.getFullYear(), originalStartTime.getMonth(), originalStartTime.getDate(), parseInt(hour), parseInt(minute));
         timeEntry.startTime = timeEntry.tempStartTime.getTime();
       }
-      if(timeEntry.tempProjectCode) {
-        timeEntry.projectCode = timeEntry.tempProjectCode
-      }
-      if(timeEntry.tempStoryRef) {
-        timeEntry.storyRef = timeEntry.tempStoryRef;
-      }
-      if(timeEntry.tempNote) {
-        timeEntry.note = timeEntry.tempNote;
-      }
+      timeEntry.projectCode = timeEntry.tempProjectCode;
+      timeEntry.storyRef = timeEntry.tempStoryRef;
+      timeEntry.note = timeEntry.tempNote;
       timeEntry.entered = timeEntry.tempEntered;
       timeEntry.new = false;
       

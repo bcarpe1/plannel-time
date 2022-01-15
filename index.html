@@ -53,12 +53,12 @@
                             <table>
                               <tr>
                                 <th style="text-align: left; width: 50px;"></th>
-                                <th style="text-align: left; width: 80px;">Start Time</th>
+                                <th style="text-align: left; width: 120px;">Start Time</th>
                                 <th style="text-align: left; width: 60px;">Hours</th>
                                 <th style="text-align: left; width: 60px;"></th>
                                 <th style="text-align: left; width: 100px;">Project</th>
                                 <th style="text-align: left; width: 100px;">Story</th>
-                                <th style="text-align: left; width: 100px;">Note</th>
+                                <th style="text-align: left; width: 300px;">Note</th>
                                 <th style="width: 50px;"></th>
                               </tr>
                             </table>
@@ -95,23 +95,23 @@
                           <td style="vertical-align: top;">
                             <table v-if="(timeEntriesForDate(date)).length" id="timeentries">
                               <tr v-for="(timeEntry, index) in timeEntriesForDate(date)" :key="timeEntry.id">
-                                <td v-if="!timeEntry.editing && timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="fas fa-check-square"></i></td>
-                                <td v-if="!timeEntry.editing && !timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
-                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 80px;">{{ timeFromDateDisplay(new Date(timeEntry.startTime)) }}</td>
+                                <td v-if="!timeEntry.editing && timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
+                                <td v-if="!timeEntry.editing && !timeEntry.entered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-square"></i></td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 120px;">{{ timeFromDateDisplay(new Date(timeEntry.startTime)) }}</td>
                                 <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 60px;">{{ displayHoursTime(new Date(getTimeEntryDurationMin(timeEntry))) }}</td>
                                 <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 60px;">{{ displayHoursDecimal(new Date(getTimeEntryDurationMin(timeEntry))) }}</td>
                                 <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.projectCode }}</td>
                                 <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.storyRef }}</td>
-                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 100px;">{{ timeEntry.note }}</td>
+                                <td v-if="!timeEntry.editing" @click="editTimeEntry(timeEntry)" style="width: 300px;">{{ timeEntry.note }}</td>
                                 <td v-if="!timeEntry.editing" style="width: 50px;"><i class="fas fa-minus-circle" @click="deleteTimeEntry(timeEntry)"></i></td>
-                                <td v-if="timeEntry.editing && timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="fas fa-check-square"></i></td>
-                                <td v-if="timeEntry.editing && !timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
-                                <td v-if="timeEntry.editing" style="width: 120px;"><input type="time" v-model="timeEntry.tempStartTime" v-on:input="setStartTime($event, timeEntry)" style="width: 120px;"/></td>
+                                <td v-if="timeEntry.editing && timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-check-square"></i></td>
+                                <td v-if="timeEntry.editing && !timeEntry.tempEntered" @click="toggleEntered(timeEntry)" style="width: 50px;"><i class="far fa-square"></i></td>
+                                <td v-if="timeEntry.editing" style="width: 120px;"><input type="time" v-model="timeEntry.tempStartTime" v-on:input="setStartTime($event, timeEntry)" style="width: 110px;"/></td>
                                 <td v-if="timeEntry.editing" style="width: 60px;"></td>
                                 <td v-if="timeEntry.editing" style="width: 60px;"></td>
                                 <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempProjectCode" v-on:input="setProjectCode($event, timeEntry)" style="width: 90px;"/></td>
                                 <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempStoryRef" v-on:input="setStoryRef($event, timeEntry)" style="width: 90px;"/></td>
-                                <td v-if="timeEntry.editing" style="width: 100px;"><input v-model="timeEntry.tempNote" v-on:input="setNote($event, timeEntry)" style="width: 90px;"/></td>
+                                <td v-if="timeEntry.editing" style="width: 300px;"><textarea v-model="timeEntry.tempNote" v-on:input="setNote($event, timeEntry)" style="width: 290px;"></textarea></td>
                                 <td v-if="timeEntry.editing" style="width: 50px;"><i class="fas fa-check-circle" @click="saveEdits(timeEntry)"></i><i style="margin-left: 5px;" class="fas fa-ban" @click="cancelEdit(timeEntry)"></i></td>
                               </tr>
                               <tr><td><i class="fas fa-plus-circle" @click="addNewEntry(date)"></i></td></tr>
@@ -124,7 +124,7 @@
                                 <td style="width: 60px;"></td>
                                 <td style="width: 100px;"></td>
                                 <td style="width: 100px;"></td>
-                                <td style="width: 100px;"></td>
+                                <td style="width: 300px;"></td>
                                 <td style="width: 50px;"></td>
                               </tr>
                               <tr><td><i class="fas fa-plus-circle" @click="addNewEntry(date)"></i></td></tr>
