@@ -28,7 +28,7 @@
       </span>
     </header>
     <section style="padding: 20px; background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.75) 0.1%, rgba(0,0,0,0) 0.21%, rgba(0,0,0,0) 100%);">
-      <div style="padding:10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+      <div style="width: 1000px; padding:10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
         <span>
           <select v-on:input="updateTimeframe()" v-model="month">
             <option value ="1">January</option>
@@ -49,7 +49,7 @@
         </div>
         <div>
           <div v-for="week in weeksWithinMonth" :key="week.dates[0].getDate()">
-            <div style="padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+            <div style="width:1000px; padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
               <div>
                 <table>
                   <tr>
@@ -77,8 +77,8 @@
                               </tr>
                             </table>
                           </td>
-                          <td>
-                            <table>
+                          <td  style="position: relative">
+                            <table style="position: absolute; top:-15px; left:40px; padding:10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
                               <tr>
                                 <th style="text-align: left; width: 100px;">Project</th>
                                 <th style="text-align: left; width: 100px;">Story</th>
@@ -133,7 +133,7 @@
                             <table v-if="(timeEntriesForDate(date)).length === 0">
                               <tr>
                                 <td style="width: 50px;"></td>
-                                <td style="width: 80px;"></td>
+                                <td style="width: 120px;"></td>
                                 <td style="width: 60px;"></td>
                                 <td style="width: 60px;"></td>
                                 <td style="width: 100px;"></td>
@@ -144,8 +144,8 @@
                               <tr><td><i class="fas fa-plus-circle" @click="addNewEntry(date)"></i></td></tr>
                             </table>
                           </td>
-                          <td style="vertical-align: top;">
-                            <table id="daysummary">
+                          <td style="vertical-align: top; position: relative">
+                            <table id="daysummary" style="width:200px; position: absolute; top:0; left:40px; padding:0; padding-left:10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
                               <tr v-for="daySummary in daySummariesForDate(date)" :key="daySummary.id">
                                 <td style="width: 100px;">{{ daySummary.projectCode }}</td>
                                 <td style="width: 100px;">{{ daySummary.storyRef }}</td>
@@ -161,7 +161,7 @@
                 </table>
               </div>
             </div>
-            <div style="padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
+            <div style="width:1000px; padding:10px; margin-top: 10px; border-radius: 5px; background: rgba(256,256,256,0.75); box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.5)">
               <label>Summary of Week Ending {{displayDayOfWeek(week.lastDate)}} - {{week.lastDate.getMonth()+1}}/{{week.lastDate.getDate()}}</label>
               <table id="weeksummary">
                 <tr>
