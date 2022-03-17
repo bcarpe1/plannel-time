@@ -255,7 +255,7 @@ const app = Vue.createApp({
       while(date.getMonth() === this.month-1)
       {
         week.dates.push(date);
-        if(date.getDay() === 6) {
+        if(date.getDay() === 6 || new Date(this.year, this.month-1, date.getDate() + 1).getMonth() === this.month) {
           week.summary = this.weekSummariesForDate(date);
           week.lastDate = week.dates[week.dates.length-1];
           weeks.push(week);
